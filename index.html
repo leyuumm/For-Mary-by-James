@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Mary, love James</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: auto;
+            overflow-x: hidden;
+        }
+
+        .card {
+            position: relative;
+            width: 400px;
+            height: 91vh;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+            z-index: 10;
+            margin-top: 50px;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1,
+        p {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        p {
+            text-indent: 50px;
+        }
+
+        h1 {
+            color: #1144dd;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 200;
+        }
+
+        .flowers {
+            width: 100%;
+            height: 380px;
+            background-image: url('https://image.floranext.com/instances/betweenflowers_net/catalog/product/o/n/one_dozen_blue_roses_64fa384c8f73b.jpg.webp?h=700&w=700&r=255&g=255&b=255');
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 20px;
+        }
+
+        .btn, .scroll-btn {
+            background-color: #1144dd;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn:hover:enabled {
+            background-color: #1144dd;
+        }
+
+        .scroll-hint {
+            color: #1144dd;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-right: 55px;
+            animation: floatHint 2s infinite ease-in-out;
+            display: block; /* Show by default when button is disabled */
+        }
+
+        @keyframes floatHint {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Hidden initially, displayed when the button is clicked */
+        .celebrate-animation {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            background: rgb(255, 255, 255);
+        }
+
+        .celebrate-flower {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('https://png.pngtree.com/png-clipart/20230927/original/pngtree-blue-rose-flower-element-png-image_13147568.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: drift 6s infinite ease-in-out;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* Heart and message styles */
+        .heart-section {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            margin-top: 40px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .heart {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            transition: transform 2s, background-color 2s;
+            z-index: 10; /* Set a higher z-index than celebrate-animation */
+            cursor: pointer;
+        }
+
+        .heart > img {
+            width: 50px;
+            transition: filter 2s;
+        }
+
+        .message {
+            padding: 20px;
+            background-color: #eee;
+            min-width: 400px;
+            height: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            border-radius: 5px;
+            transition: height 0.5s ease;
+        }
+
+        .message p {
+            padding-left: 0 !important;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .message h4 {
+            margin-top: 10%;
+            margin-left: 69%;
+        }
+
+        .message.open {
+            height: 75%;
+            padding: 20px;
+            overflow-y: scroll;
+        }
+
+        /* Scroll Button */
+        .scroll-btn {
+            position: relative;
+            z-index: 5;
+            margin-top: 10px;
+        }
+
+        .floating-flowers {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .floating-flowers img {
+            width: 60px;
+            height: 60px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .heart {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            transition: transform 2s, background-color 2s;
+            z-index: 1;
+            cursor: pointer; /* Added cursor pointer */
+            background-color: #f7f7f7;
+        }
+
+        .heart > img {
+            width: 50px;
+            height: auto;
+            transition: filter 2s;
+        }
+
+        .message {
+            padding: 0;
+            background-color: #eee; /*Inside the letter*/
+            min-width: 400px;
+            height: 0%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            border-radius: 5px;
+            transition: height 0.5s ease, padding 0.5s ease;
+        }
+
+        .message.open {
+            height: 75%;
+            padding: 20px;
+        }
+
+        .heart > img:hover {
+            animation-name: beat;
+            animation-duration: 2s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-play-state: running;
+        }
+
+        .valentine-card {
+    display: none; /* Hidden initially */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 20;
+    justify-content: center;
+    align-items: center;
+}
+
+.valentine-card .container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.valentine-card h1 {
+    font-size: 2.5em;
+    color: #d32f2f;
+}
+
+.valentine-card .buttons {
+    margin-top: 20px;
+}
+
+.valentine-card .buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.valentine-card .yes-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.valentine-card .no-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.valentine-card .gif_container img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-top: 20px;
+}
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes beat {
+            0% {
+                width: 50px;
+            }
+            25% {
+                width: 58px;
+            }
+            30% {
+                width: 50px;
+            }
+            50% {
+                width: 45px;
+            }
+            60% {
+                width: 50px;
+            }
+            75% {
+                width: 58px;
+            }
+            100% {
+                width: 50px;
+            }
+        }
+
+        /* Responsive for iPhone sizes */
+        @media screen and (max-width: 375px) {
+            .card {
+                width: 90%;
+                padding: 15px;
+            }
+            .flowers {
+                height: 150px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .heart > img {
+                width: 40px;
+            }
+            .btn {
+                font-size: 1em;
+            }
+        }
+
+        @media screen and (max-width: 414px) {
+            .card {
+                width: 95%;
+                padding: 20px;
+            }
+            .flowers {
+                height: 180px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            p {
+                font-size: 1.1em;
+            }
+            .heart > img {
+                width: 45px;
+            }
+            .btn {
+                font-size: 1.05em;
+            }
+        }
+
+        @media screen and (max-width: 320px) {
+            .card {
+                width: 100%;
+                padding: 10px;
+            }
+            .flowers {
+                height: 130px;
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+            p {
+                font-size: 0.9em;
+            }
+            .heart > img {
+                width: 35px;
+            }
+            .btn {
+                font-size: 0.9em;
+                padding: 8px 16px;
+            }
+        }
+
+            /* Additional responsive styles for iPhone 11 */
+        @media screen and (max-width: 828px) {
+        .card {
+            width: 90%;
+            padding: 20px;
+        }
+        .flowers {
+            height: 250px; /* Adjusting the height for better visual appeal */
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        p {
+            font-size: 1.1em;
+        }
+        .heart > img {
+            width: 45px; /* Adjusting heart size */
+        }
+        .btn {
+            font-size: 1.1em;
+        }   
+    }
+
+        /* Responsive styles for iPhone 7 Plus */
+        @media screen and (max-width: 1080px) {
+        .card {
+            width: 85%;
+            padding: 25px;
+        }
+        .flowers {
+            height: 300px; /* Adjusting height for a better look */
+        }
+        h1 {
+            font-size: 2.3em;
+        }
+        p {
+            font-size: 1.05em;
+        }
+        .heart > img {
+            width: 50px; /* Slightly larger heart for better visibility */
+        }
+        .btn {
+            font-size: 1.1em;
+        }
+    }
+
+    .header_text {
+        font-size: 3em;
+        color: #d32f2f;
+    }
+
+    /* Style for the "Go Back" button */
+    .go-back-button {
+        background-color: #ff6f61; /* Coral color */
+        color: white; /* Text color */
+        border: none; /* Remove border */
+        padding: 10px 20px; /* Add padding */
+        font-size: 16px; /* Font size */
+        border-radius: 25px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    }
+
+    /* Hover effect for the "Go Back" button */
+    .go-back-button:hover {
+        background-color: #ff4a3d; /* Darker coral color on hover */
+        transform: scale(1.05); /* Slightly enlarge the button */
+    }
+
+    /* Active effect for the "Go Back" button */
+    .go-back-button:active {
+        background-color: #ff3b2f; /* Even darker coral color on click */
+        transform: scale(0.95); /* Slightly shrink the button */
+    }
+
+    /* Animation for the "Press Me" button */
+@keyframes pressMeAnimation {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(17, 68, 221, 0.4);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(17, 68, 221, 0.6);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(17, 68, 221, 0.4);
+    }
+}
+
+/* Class to trigger the animation */
+.press-me-animation {
+    animation: pressMeAnimation 0.5s ease-in-out;
+}
+
+    </style>
+</head> 
+
+<body>
+    <audio id="monthsaryMusic" src="https://www.dropbox.com/scl/fi/ryzxeji300ynlgpooylbl/pretty-eyes_5iEquKzc.mp3?rlkey=ybongqayafnkqy4dtlkr4yhqs&st=xig6ytsw&dl=1" preload="auto"></audio>
+
+    <div class="valentine-card" id="valentineCard">
+        <div class="container">
+            <h1>Will you be my Valentine?</h1>
+            <div class="buttons">
+                <button class="yes-button" onclick="handleYesClick()">Yes</button>
+                <button class="no-button" onclick="handleNoClick()">No</button>
+            </div>
+            <div class="gif_container">
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW5lenZyZHI5OXM2eW95b3pmMG40cWVrMDhtNjVuM3A4dGNxa2g2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/VM1fcpu2bKs1e2Kdbj/giphy.gif" alt="Cute GIF">
+            </div>
+        </div>
+    </div>
+
+        <!-- Hidden Valentine Card -->
+    <div class="valentine-card" id="hiddenValentineCard" style="display: none;">
+        <div class="container">
+            <h1 class="header_text">Knew you would say yes!</h1>
+            <div class="gif_container">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif" alt="Celebration GIF">
+            </div>
+            <!-- Adding the "Go Back" button -->
+        <button class="go-back-button" onclick="handleGoBackClick()">Go Back</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="floating-flowers">
+            <img src="https://png.pngtree.com/png-clipart/20230927/original/pngtree-blue-rose-flower-element-png-image_13147568.png" alt="Flower">
+            <img src="https://png.pngtree.com/png-clipart/20230927/original/pngtree-blue-rose-flower-element-png-image_13147568.png" alt="Flower">
+            <img src="https://png.pngtree.com/png-clipart/20230927/original/pngtree-blue-rose-flower-element-png-image_13147568.png" alt="Flower">
+            <img src="https://png.pngtree.com/png-clipart/20230927/original/pngtree-blue-rose-flower-element-png-image_13147568.png" alt="Flower">
+            <img src="https://png.pngtree.com/png-clipart/20230927/original/pngtree-blue-rose-flower-element-png-image_13147568.png" alt="Flower">
+        </div>
+        <h1>Happy Month of Love Mary!</h1>
+        <div class="flowers"></div>
+        <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-right: 30px; padding-right: 10px;">Hoping you’ll receive this</p>
+        <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-right: 30px; padding-right: 5px; margin-bottom: 10px;"> with a smile full of love :)</p>
+        <button class="btn" id="celebrateBtn" disabled>Press Me!</button>
+        <p class="scroll-hint" id="scrollHint">Scroll to reveal</p> <!-- Scroll hint added here -->
+    </div>
+
+    <!-- Heart and message section -->
+    <div class="heart-section">
+        <div class="heart">
+            <img src="https://www.pngall.com/wp-content/uploads/15/Emoji-Heart-PNG.png" alt="Heart">
+        </div>
+        <div class="message">
+            <h1>To Mary!</h1>
+            <br>
+            <p>Hii Baby!</p>
+            <p style="letter-spacing: 10%; margin: 10%; line-height: -100%;">First of all, thank you. The past few months have been a roller coaster ride for us, u moved out, I became the captain of the basketball team, research, ug other dramas sa kinabuhi that tries to separate us, but we’re here, always with each other no matter what circumstance we are in, thank u sa support sa akoa always, being my confidant even if slowly na pawala ako confidence sako kaugalingon, u make me want to achieve great things and have supported me all throughout in what I do, mapabasket, billiards, computer, or other stuffs basta always in moderation, i’ve prepared this one since start of feb pa and I hope this won’t disappoint you, ik dili in favor ang valentines sa atoa rn because tight pa ato budget, but I promise you, I will forever provide you the best there is, make u happy and smile with my corny jokes samot nag masuko ka ug tupakon ka HAHAHAHAHAH I LOVE YOU BABY, my number 1 idol and bff for life!!</p>
+            <br>
+            <p>Happy Valentines my palangga!!</p>
+            <br>
+            <p>I Love you always!</p>
+            <br>
+            <h4>Jessie James C. Ancot</h4>
+            <br>
+            <br>
+            <p style="text-align: center; font-size: smaller; color: gray;">Scroll all the way to the top</p>
+        </div>
+    </div>
+
+    <!-- Hidden celebration animation initially -->
+    <div class="celebrate-animation" id="celebrateAnimation"></div>
+
+    <script>
+
+        // Function to play the music
+        function playMusic() {
+            const monthsaryMusic = document.getElementById('monthsaryMusic');
+
+
+            monthsaryMusic.currentTime = 0; // Reset music to start
+            monthsaryMusic.play().catch(error => {
+                console.log("Music playback error: ", error);
+            });
+        }
+
+
+        // Function to create flower elements on the screen with random positions
+        function createFlowers() {
+            const celebrationDiv = document.getElementById('celebrateAnimation');
+
+            for (let i = 0; i < 50; i++) {
+                const flower = document.createElement('div');
+                flower.classList.add('celebrate-flower');
+                flower.style.left = `${Math.random() * 100}vw`;
+                flower.style.top = `${Math.random() * 100}vh`;
+                flower.style.animationDelay = `${Math.random() * 5}s`;
+                flower.style.transform = `rotate(${Math.random() * 360}deg)`;
+                celebrationDiv.appendChild(flower);
+            }
+        }
+
+        // Function to show the celebration animation and valentine card
+        function startCelebration() {
+            const celebrationDiv = document.getElementById('celebrateAnimation');
+            const valentineCard = document.getElementById('valentineCard');
+            const pressMeButton = document.getElementById('celebrateBtn');
+
+            // Adding animation class to the "Press Me" button.
+            pressMeButton.classList.add('press-me-animation');
+
+            // Remove the animation class after the animation ends
+            pressMeButton.addEventListener('animationend', () => {
+                pressMeButton.classList.remove('press-me-animation');
+            });
+
+            // Show the celebration animation and the valentine card
+            celebrationDiv.style.display = 'block';
+            valentineCard.style.display = 'flex';
+            createFlowers();
+            showValentineCard();
+        }
+
+         // Function to handle the "Yes" button click
+         function handleYesClick() {
+            // Hide the current valentine card
+            const valentineCard = document.getElementById('valentineCard');
+            valentineCard.style.display = 'none';
+
+            // Show the hidden valentine card
+            const hiddenValentineCard = document.getElementById('hiddenValentineCard');
+            hiddenValentineCard.style.display = 'block';
+            
+        }
+
+        // Function to handle the "No" button click
+        function handleNoClick() {
+            const noButton = document.querySelector('.no-button');
+            const messages = [
+                "Are you sure?",
+                "Really sure??",
+                "Are you positive?",
+                "Pookie please...",
+                "Just think about it!",
+                "If you say no, I will be really sad...",
+                "I will be very sad...",
+                "I will be very very very sad...",
+                "Ok fine, I will stop asking...",
+                "Just kidding, say yes please! ❤️"
+            ];
+            let messageIndex = 0;
+
+            noButton.textContent = messages[messageIndex];
+            messageIndex = (messageIndex + 1) % messages.length;
+            const yesButton = document.querySelector('.yes-button');
+            const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
+            yesButton.style.fontSize = `${currentSize * 1.5}px`;
+        }
+
+        // Function to handle the "Go Back" button click
+        function handleGoBackClick() {
+            // Hide the hidden valentine card
+            const hiddenValentineCard = document.getElementById('hiddenValentineCard');
+            hiddenValentineCard.style.display = 'none';
+
+            // Show the original valentine card
+            const valentineCard = document.getElementById('card');
+            valentineCard.style.display = 'block';
+        }
+
+
+        // Click event for heart to show the message and enable the button
+        document.querySelector('.heart').addEventListener('click', function() {
+            const message = document.querySelector('.message');
+            const heart = document.querySelector('.heart');
+            const isOpen = message.classList.contains('open');
+
+            if (isOpen) {
+                // Close the message
+                message.classList.remove('open');
+                heart.classList.remove('openHer');
+                document.querySelector('.heart-section').style.backgroundColor = "#ADD8E6";
+                document.getElementById('scrollHint').style.display = 'block'; // Show the scroll hint
+            } else {
+                // Open the message and enable the button
+                message.classList.add('open');
+                heart.classList.add('openHer');
+                document.querySelector('.heart-section').style.backgroundColor = "#ADD8E6";
+                document.getElementById('celebrateBtn').disabled = false; // Enable the button once the message is opened
+                document.getElementById('scrollHint').style.display = 'none'; // Hide the scroll hint
+                playMusic();
+            }
+        });
+
+        // Celebration button click event
+        document.getElementById('celebrateBtn').addEventListener('click', startCelebration);
+    </script>
+</body>
+</html>
